@@ -3,7 +3,7 @@ import httpStatus from 'http-status';
 import supertest from 'supertest';
 import { createUser } from '../factories';
 import { cleanDb } from '../helpers';
-import app, { init, close } from '@/app';
+import app, { init } from '@/app';
 
 beforeAll(async () => {
   await init();
