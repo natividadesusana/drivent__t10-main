@@ -1,6 +1,6 @@
 import { Response, Request } from 'express';
-import * as ticketService from '../services/tickets-service/index';
 import httpStatus from 'http-status';
+import * as ticketService from '@/services/tickets-service/index';
 import { AuthenticatedRequest } from '@/middlewares';
 import { CreateTicket } from '@/protocols';
 

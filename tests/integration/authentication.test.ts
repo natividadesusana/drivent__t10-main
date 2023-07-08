@@ -10,10 +10,6 @@ beforeAll(async () => {
   await cleanDb();
 });
 
-afterAll(async () => {
-  await close();
-});
-
 const server = supertest(app);
 
 describe('POST /auth/sign-in', () => {

@@ -1,6 +1,6 @@
+import { TicketType } from '@prisma/client';
 import * as repositoryTicket from '@/repositories/tickets-repository';
 import enrollmentRepository from '@/repositories/enrollment-repository';
-import { TicketType } from '@prisma/client';
 import { CreateTicket, TicketWithTicketType } from '@/protocols';
 import { notFoundError } from '@/errors';
 
