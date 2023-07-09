@@ -47,6 +47,19 @@ export type RequestError = {
   message: string;
 };
 
+export type CardData = {
+  issuer: string;
+  number: number;
+  name: string;
+  expirationDate: Date;
+  cvv: number;
+};
+
+export type PaymentBody = {
+  ticketId: number;
+  cardData: CardData;
+};
+
 export type CreateTicket = Omit<Ticket, 'id' | 'createdAt' | 'updatedAt' | 'status' | 'enrollmentId'>;
 
 export type TicketWithTicketType = Ticket & {

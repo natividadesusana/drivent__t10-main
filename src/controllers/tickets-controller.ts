@@ -38,12 +38,12 @@ export async function createTicket(req: AuthenticatedRequest, res: Response) {
       return res.status(httpStatus.NOT_FOUND).send({
         message: error.message,
       });
-    }
-    if (error.name === 'RequestError') {
+    } else if (error.name === 'RequestError') {
       return res.status(httpStatus.BAD_REQUEST).send({
         message: error.message,
       });
+    } else {
+      return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
     }
-    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
   }
 }
