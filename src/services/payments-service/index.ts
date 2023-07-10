@@ -17,10 +17,12 @@ export async function getPaymentsByTicket(ticketId: number, userId: number): Pro
 }
 
 export async function createPayment(body: PaymentBody, userId: number): Promise<Payment> {
-  const tickets = await repositoryTicket.validationTicket(body.ticketId);
+  const ticketId = body.ticketId;
+
+  const tickets = await repositoryTicket.validationTicket(ticketId);
   if (!tickets) throw notFoundError();
 
-  const userTicket = await repositoryPayment.validateTicket(body.ticketId);
+  const userTicket = await repositoryPayment.validateTicket(ticketId);
   if (userTicket !== userId) throw unauthorizedError();
 
   const price = await repositoryPayment.getPriceByTicket(tickets.ticketTypeId);
@@ -29,6 +31,5 @@ export async function createPayment(body: PaymentBody, userId: number): Promise<
     await repositoryPayment.update(userId);
   }
 
-  const payment = await repositoryPayment.getPaymentsByTicket(body.ticketId);
-  return payment;
+  return await repositoryPayment.getPaymentsByTicket(ticketId);
 }

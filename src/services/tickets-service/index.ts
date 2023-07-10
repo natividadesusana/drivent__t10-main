@@ -5,12 +5,12 @@ import { CreateTicket, TicketWithTicketType } from '@/protocols';
 import { notFoundError } from '@/errors';
 
 export async function getTicketsTypes() {
-  const ticket = await repositoryTicket.getTicketsTypes();
-  return ticket;
+  return repositoryTicket.getTicketsTypes();
 }
 
 export async function getUserTicket(userId: number): Promise<TicketWithTicketType> {
-  return searchAndReturnTicket(userId);
+  const ticket = await repositoryTicket.getUserTicket(userId);
+  return validateTicket(ticket);
 }
 
 export async function createTicket(data: CreateTicket, userId: number): Promise<TicketWithTicketType> {
@@ -20,33 +20,21 @@ export async function createTicket(data: CreateTicket, userId: number): Promise<
   }
 
   await repositoryTicket.createTicket(data, enrollment.id);
-  return searchAndReturnTicket(userId);
+  return getUserTicket(userId);
 }
 
-async function searchAndReturnTicket(userId: number): Promise<TicketWithTicketType> {
-  const ticket = await repositoryTicket.getUserTicket(userId);
-
-  if (!ticket) {
+function validateTicket(ticket: TicketWithTicketType): TicketWithTicketType {
+  if (!ticket || !ticket.TicketType) {
     throw notFoundError();
   }
 
   const { id, status, ticketTypeId, enrollmentId, createdAt, updatedAt, TicketType } = ticket;
 
-  if (!TicketType) {
-    throw notFoundError();
-  }
-
   const ticketType: TicketType = {
-    id: TicketType.id,
-    name: TicketType.name,
-    price: TicketType.price,
-    isRemote: TicketType.isRemote,
-    includesHotel: TicketType.includesHotel,
-    createdAt: TicketType.createdAt,
-    updatedAt: TicketType.updatedAt,
+    ...TicketType,
   };
 
-  const ticketWithTicketType: TicketWithTicketType = {
+  return {
     id,
     status,
     ticketTypeId,
@@ -55,6 +43,4 @@ async function searchAndReturnTicket(userId: number): Promise<TicketWithTicketTy
     createdAt,
     updatedAt,
   };
-
-  return ticketWithTicketType;
 }

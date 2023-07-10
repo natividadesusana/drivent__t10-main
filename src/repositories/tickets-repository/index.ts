@@ -10,7 +10,7 @@ export async function getUserTicket(userId: number): Promise<TicketWithTicketTyp
   return await prisma.ticket.findFirst({
     where: {
       Enrollment: {
-        userId: userId,
+        userId,
       },
     },
     include: {
@@ -26,8 +26,8 @@ export async function createTicket(data: CreateTicket, enrollmentId: number): Pr
   return prisma.ticket.create({
     data: {
       status: 'RESERVED',
-      ticketTypeId: ticketTypeId,
-      enrollmentId: enrollmentId,
+      ticketTypeId,
+      enrollmentId,
     },
   });
 }
