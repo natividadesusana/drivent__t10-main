@@ -35,13 +35,9 @@ export async function createTicket(req: AuthenticatedRequest, res: Response) {
     return res.status(httpStatus.CREATED).send(ticket);
   } catch (error) {
     if (error.name === 'NotFoundError') {
-      return res.status(httpStatus.NOT_FOUND).send({
-        message: error.message,
-      });
+      return res.status(httpStatus.NOT_FOUND).send(error.message);
     } else if (error.name === 'RequestError') {
-      return res.status(httpStatus.BAD_REQUEST).send({
-        message: error.message,
-      });
+      return res.status(httpStatus.BAD_REQUEST).send(error.message);
     } else {
       return res.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
     }
