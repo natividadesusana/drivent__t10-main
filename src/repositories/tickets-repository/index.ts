@@ -1,41 +1,64 @@
-import { Ticket } from '@prisma/client';
-import { CreateTicket, TicketWithTicketType } from '@/protocols';
+import { TicketStatus, TicketType } from '@prisma/client';
 import { prisma } from '@/config';
+import { CreateTicketParams } from '@/protocols';
 
-export async function getTicketsTypes() {
-  return await prisma.ticketType.findMany();
+async function findTicketTypes(): Promise<TicketType[]> {
+  return prisma.ticketType.findMany();
 }
 
-export async function getUserTicket(userId: number): Promise<TicketWithTicketType> {
-  return await prisma.ticket.findFirst({
-    where: {
-      Enrollment: {
-        userId,
-      },
-    },
+async function findTicketByEnrollmentId(enrollmentId: number) {
+  return prisma.ticket.findFirst({
+    where: { enrollmentId },
     include: {
       TicketType: true,
+    },
+  });
+}
+
+async function createTicket(ticket: CreateTicketParams) {
+  return prisma.ticket.create({
+    data: ticket,
+  });
+}
+
+async function findTickeyById(ticketId: number) {
+  return prisma.ticket.findFirst({
+    where: {
+      id: ticketId,
+    },
+    include: {
       Enrollment: true,
     },
   });
 }
 
-export async function createTicket(data: CreateTicket, enrollmentId: number): Promise<Ticket> {
-  const ticketTypeId: number = data.ticketTypeId;
-
-  return prisma.ticket.create({
-    data: {
-      status: 'RESERVED',
-      ticketTypeId,
-      enrollmentId,
-    },
-  });
-}
-
-export async function validationTicket(ticketId: number): Promise<Ticket> {
-  return prisma.ticket.findUnique({
+async function findTickeWithTypeById(ticketId: number) {
+  return prisma.ticket.findFirst({
     where: {
       id: ticketId,
     },
+    include: {
+      TicketType: true,
+    },
   });
 }
+
+async function ticketProcessPayment(ticketId: number) {
+  return prisma.ticket.update({
+    where: {
+      id: ticketId,
+    },
+    data: {
+      status: TicketStatus.PAID,
+    },
+  });
+}
+
+export default {
+  findTicketTypes,
+  findTicketByEnrollmentId,
+  createTicket,
+  findTickeyById,
+  findTickeWithTypeById,
+  ticketProcessPayment,
+};
