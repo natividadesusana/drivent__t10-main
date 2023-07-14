@@ -7,17 +7,34 @@ export async function getHotels(req: AuthenticatedRequest, res: Response, next: 
   const { userId } = req;
 
   try {
-    const hotels = await hotelsService.getHotels(userId);
+    const hotels = await hotelsService.getHotels(Number(userId));
     return res.status(httpStatus.OK).send(hotels);
   } catch (error) {
+    if (error.name === "NotFoundError") {
+      return res.sendStatus(httpStatus.NOT_FOUND);
+    }
+    if (error.name === "cannotListHotelsError") {
+      return res.sendStatus(httpStatus.PAYMENT_REQUIRED);
+    }
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
 
 export async function getHotelsWithRooms(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  const { userId } = req;
+  const { hotelId } = req.params;
+
   try {
-    
+    const hotels = await hotelsService.getHotelsWithRooms(Number(userId), Number(hotelId));
+
+    return res.status(httpStatus.OK).send(hotels);
   } catch (error) {
+    if (error.name === "NotFoundError") {
+      return res.sendStatus(httpStatus.NOT_FOUND);
+    }
+    if (error.name === "cannotListHotelsError") {
+      return res.sendStatus(httpStatus.PAYMENT_REQUIRED);
+    }
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
