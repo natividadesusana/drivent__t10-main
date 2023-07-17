@@ -2,7 +2,7 @@ import { notFoundError } from '@/errors';
 import enrollmentRepository from '@/repositories/enrollment-repository';
 import hotelRepository from '@/repositories/hotel-repository';
 import ticketsRepository from '@/repositories/tickets-repository';
-import { cannotListHotelsError } from '@/errors/cannot-list-hotels-error';
+import { paymentRequiredError } from '@/errors/payment-required-error';
 
 async function listHotels(userId: number) {
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
@@ -13,8 +13,12 @@ async function listHotels(userId: number) {
 
   const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
 
-  if (!ticket || !ticket.TicketType.includesHotel || ticket.TicketType.isRemote || ticket.status === 'RESERVED') {
-    throw cannotListHotelsError();
+  if (!ticket) {
+    throw notFoundError();
+  }
+
+  if (!ticket.TicketType.includesHotel || ticket.TicketType.isRemote || ticket.status !== 'PAID') {
+    throw paymentRequiredError();
   }
 }
 
@@ -27,7 +31,6 @@ async function getHotels(userId: number) {
   }
   return hotels;
 }
-
 
 async function getHotelsWithRooms(userId: number, hotelId: number) {
   await listHotels(userId);
@@ -43,7 +46,7 @@ async function getHotelsWithRooms(userId: number, hotelId: number) {
 const hotelService = {
   listHotels,
   getHotels,
-  getHotelsWithRooms
+  getHotelsWithRooms,
 };
 
 export default hotelService;
