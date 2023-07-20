@@ -13,6 +13,7 @@
     "lint": "eslint .",
     "lint:staged": "lint-staged",
     "test": "cross-env NODE_ENV=test jest --passWithNoTests --runInBand",
+    "test:coverage": "cross-env NODE_ENV=test jest --passWithNoTests --runInBand --coverage --collectCoverageFrom='./src/**'",
     "test:migration:run": "npm run test:load-envs prisma migrate deploy",
     "test:migration:generate": "npm run test:load-envs prisma migrate dev",
     "test:watch": "jest --watch --passWithNoTests --runInBand",
@@ -33,7 +34,7 @@
     "express",
     "nodejs"
   ],
-  "author": "Alexandre Nunes",
+  "author": "Susana Natividade",
   "license": "ISC",
   "prisma": {
     "seed": "npm run dev:load-envs -- ts-node prisma/seed.ts"
