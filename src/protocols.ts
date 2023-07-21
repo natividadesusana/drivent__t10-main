@@ -64,3 +64,5 @@ export type InputTicketBody = {
 };
 
 export type CreateParams = Omit<Booking, 'id' | 'createdAt' | 'updatedAt'>;
+
+export type UpdateParams = Omit<Booking, "createdAt" | "updatedAt">;

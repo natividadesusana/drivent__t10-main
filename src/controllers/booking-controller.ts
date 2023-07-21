@@ -36,8 +36,23 @@ export async function createBooking(req: AuthenticatedRequest, res: Response) {
 }
 
 export async function updateBooking(req: AuthenticatedRequest, res: Response) {
+  const bookingId = Number(req.params.bookingId);
+  const { roomId } = req.body;
+  const { userId } = req;
+
   try {
+    if (!roomId || !bookingId) {
+      return res.sendStatus(httpStatus.NOT_FOUND);
+    }
+
+    const booking = await bookingService.updateBookingRoomById(userId, Number(roomId));
+    return res.status(httpStatus.OK).send({
+      bookingId: booking.id,
+    });
   } catch (error) {
+    if (error.name === 'CannotBookingError') {
+      return res.sendStatus(httpStatus.FORBIDDEN);
+    }
     return res.sendStatus(httpStatus.NOT_FOUND);
   }
 }
