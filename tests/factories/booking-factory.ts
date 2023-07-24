@@ -15,7 +15,7 @@ export function createBooking({ roomId, userId }: CreateBookingParams) {
   });
 }
 
-export function getBookingReturn() { 
+export function getBookingReturn() {
   const booking: Booking & { Room: Room } = {
     id: 1,
     userId: 1,
@@ -34,7 +34,7 @@ export function getBookingReturn() {
   return booking;
 }
 
-export function findTicketByEnrollmentIdReturn() { 
+export function findTicketByEnrollmentIdReturn() {
   const expected: Ticket & { TicketType: TicketType } = {
     id: 1,
     ticketTypeId: 1,
@@ -59,7 +59,7 @@ export function findTicketByEnrollmentIdReturn() {
 export function enrollmentWithAddressReturn() {
   const expected: Enrollment & { Address: Address[] } = {
     id: 1,
-    name: 'John Doe',
+    name: 'João',
     cpf: '12345678901',
     birthday: new Date(),
     phone: '123456789',
@@ -86,7 +86,7 @@ export function enrollmentWithAddressReturn() {
   return expected;
 }
 
-export function findRoomByIdReturn() { 
+export function findRoomByIdReturn() {
   const expected: Room = {
     id: 1,
     name: 'Teste',
@@ -99,7 +99,7 @@ export function findRoomByIdReturn() {
   return expected;
 }
 
-export function findBookingByRoomIdReturn() { 
+export function findBookingByRoomIdReturn() {
   const expected: (Booking & { Room: Room })[] = [
     {
       id: 1,
@@ -111,6 +111,60 @@ export function findBookingByRoomIdReturn() {
         id: 1,
         name: 'Teste',
         capacity: 2,
+        hotelId: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    },
+  ];
+
+  return expected;
+}
+
+export function getBookingDifferentUserIdReturn() {
+  const booking: Booking & { Room: Room } = {
+    id: 1,
+    userId: 2,
+    roomId: 1,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    Room: {
+      id: 1,
+      name: 'Room 1',
+      capacity: 2,
+      hotelId: 1,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  };
+  return booking;
+}
+
+export function findRoomByIdNoCapacityReturn() {
+  const expected: Room = {
+    id: 1,
+    name: 'Teste',
+    capacity: 1,
+    hotelId: 1,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
+  return expected;
+}
+
+export function findBookingByRoomIdNoCapacityReturn() {
+  const expected: (Booking & { Room: Room })[] = [
+    {
+      id: 1,
+      userId: 1,
+      roomId: 1,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      Room: {
+        id: 1,
+        name: 'Teste',
+        capacity: 1,
         hotelId: 1,
         createdAt: new Date(),
         updatedAt: new Date(),
